@@ -157,3 +157,4 @@ if __name__ == '__main__':
     root.geometry("1600x800")
     app=Simulator(root)
     root.mainloop()
+    print("asdasd")
