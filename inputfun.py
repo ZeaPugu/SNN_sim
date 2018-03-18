@@ -43,7 +43,15 @@ def input_stimulus(mean, std, runtime, dt, tau, order):
             
     return input_noise_filt
 
-def psth(spike_t, tbin):
+def psth(spike, lim, tbin):
+    ## remove unwanted t from spike_t, spike_i index only within defined limit
+    spike_i = []
+    spike_t = []
+    for j in range(0, size(spike.i)):
+        if(spike.i[j] > lim[0] and spike.i[j] < lim[1]):
+            spike_t.append(spike.t[j])
+            spike_i.append(spike.i[j])
+            
     t = 0
     count = 0
     freq = []
@@ -60,3 +68,25 @@ def psth(spike_t, tbin):
         count +=1;
     
     return freq, tvec
+
+def visualise_connectivity(S):
+    Ns = len(S.source)
+    Nt = len(S.target)
+    figure(figsize=(10, 4))
+    subplot(121)
+    plot(zeros(Ns), arange(Ns), 'ok', ms=10)
+    plot(ones(Nt), arange(Nt), 'ok', ms=10)
+    for i, j in zip(S.i, S.j):
+        plot([0, 1], [i, j], '-k')
+    xticks([0, 1], ['Source', 'Target'])
+    ylabel('Neuron index')
+    xlim(-0.1, 1.1)
+    ylim(-1, max(Ns, Nt))
+    subplot(122)
+    plot(S.i, S.j, 'ok')
+    xlim(-1, Ns)
+    ylim(-1, Nt)
+    xlabel('Source neuron index')
+    ylabel('Target neuron index')
+
+
